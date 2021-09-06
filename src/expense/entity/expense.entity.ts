@@ -24,7 +24,7 @@ export class Expense{
     @Column()
     amount: number;
 
-    @Column()
+    @Column({default: () => 'CURRENT_TIMESTAMP'})
     expenseDate: Date;
   
     @CreateDateColumn()

@@ -1,4 +1,47 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { ExpenseService } from './expense.service';
+import { ExpenseCreateRequest, ExpenseFilterRequest } from './request/expense.request';
 
 @Controller('expense')
-export class ExpenseController {}
+export class ExpenseController {
+    constructor(
+        private expenseService: ExpenseService,
+      ) {}
+
+    @Post("/create")
+    async createExpense(@Body() expenseRequest: ExpenseCreateRequest){
+        console.log("create expense request method=", expenseRequest) ;
+        return await this.expenseService.createExpense(expenseRequest);
+    }
+
+    @Get("/expenseall")
+    async expenseAll() {
+        console.log("expenseall expense request method call--") ;
+        return await this.expenseService.findAll();
+    }
+
+    @Get("/findexpense/:id")
+    async getExpenseById(@Param('id', ParseIntPipe) expenseId: number){
+        console.log("get expense by expenseId request method call--") ;
+        return await this.expenseService.findOne(expenseId);
+    }
+
+    @Delete("/delete/:id")
+    async deleteExpense(@Param('id', ParseIntPipe) expenseId: number){
+        console.log("delete expense "+expenseId+" request method call--") ;
+        await this.expenseService.remove(expenseId);
+        return "delete expense "+expenseId ;
+    }
+
+    @Put("/update/:id")
+    async updateExpense(@Param('id', ParseIntPipe) expenseId: number, @Body() expenseRequest: ExpenseCreateRequest){
+        console.log("update expense "+expenseId+" request method call--") ;
+        return await this.expenseService.updateUser(expenseId, expenseRequest);
+    }
+
+    @Get("/paginated")
+    async getPaginated(@Query() request: ExpenseFilterRequest) {
+        return await this.expenseService.getPagination(request.perPageDataCnt, request.pageNumber);
+    }
+
+}
