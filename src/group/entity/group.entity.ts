@@ -19,7 +19,6 @@ export class Group{
     @OneToOne(() => User, user => user.groups)
     creator: User;
 
-
     @ManyToOne(() => Expense, expense => expense.expenseId)
     expenses: Expense[];
 
