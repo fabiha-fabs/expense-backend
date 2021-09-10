@@ -43,4 +43,12 @@ export class UsersService {
           take: perPageDataCnt,
         });
       }
+
+      async findUserByUserName(username: string): Promise<User | undefined> {
+        return await this.usersRepository.findOne({
+          where: {
+            userName: username,
+          }
+        });
+      }
 }

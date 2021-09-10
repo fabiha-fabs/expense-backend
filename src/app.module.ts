@@ -6,11 +6,12 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { GroupModule } from './group/group.module';
 import { ExpenseModule } from './expense/expense.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(), UsersModule, GroupModule, ExpenseModule
+    TypeOrmModule.forRoot(), UsersModule, GroupModule, ExpenseModule, AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,6 @@
-import { Delete, ParseIntPipe, Put, Query } from '@nestjs/common';
+import { Delete, ParseIntPipe, Put, Query, UseGuards } from '@nestjs/common';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { User } from './entity/users.entity';
 import { UserCreateRequest, UserFilterRequest } from './request/users.request';
 import { UsersService } from './users.service';
@@ -21,6 +22,7 @@ export class UsersController {
         return await this.userService.createUser(userRequest);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get("/userall")
     async userAll() {
         console.log("userall user request method call--") ;
