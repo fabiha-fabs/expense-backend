@@ -19,6 +19,9 @@ export class Group{
     @ManyToOne(() => Expense, expense => expense.expenseId)
     expenses: Expense[];
 
+    @ManyToOne(() => User, user => user.createdGroups)
+    creator: User;
+
     @CreateDateColumn()
     createdAt: Date;
   

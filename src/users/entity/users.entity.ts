@@ -25,15 +25,6 @@ export class User {
 
     @Column({ default: null, nullable: true })
     country?: string;
-  
-    @CreateDateColumn()
-    createdAt: Date;
-  
-    @UpdateDateColumn()
-    updatedAt: Date;
- 
-    @DeleteDateColumn()
-    deletedAt: Date;
     
     @ManyToMany(() => Group, group => group.users)
     @JoinTable()
@@ -42,4 +33,15 @@ export class User {
     @OneToMany(() => Expense, expense => expense.expenseUser)
     expenses: Expense[];
 
+    @OneToMany(() => Group, group => group.creator)
+    createdGroups: Group[];
+
+    @CreateDateColumn()
+    createdAt: Date;
+  
+    @UpdateDateColumn()
+    updatedAt: Date;
+ 
+    @DeleteDateColumn()
+    deletedAt: Date;
   }

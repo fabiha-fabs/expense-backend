@@ -11,12 +11,6 @@ export class ExpenseCreateRequest{
     description: string;
 
     @IsNotEmpty()
-    expenseUser: User;
-
-    @IsOptional()
-    expenseGroup: Group[];
-
-    @IsNotEmpty()
     amount: number;
 
     @IsOptional()

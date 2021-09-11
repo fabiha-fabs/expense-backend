@@ -5,29 +5,14 @@ export class GroupCreateRequest{
 
     @IsNotEmpty()
     groupName: string;
- 
-    @IsNotEmpty()
-    isActive: boolean;
 
-   
-    @IsNotEmpty()
-    groupUser: User;
-
-    //@OneToOne(() => User, user => user.groups)
-    @IsNotEmpty()
-    creator: User;
 }
 
 export class GroupUpdateRequest{
 
     @IsNotEmpty()
     groupName: string;
- 
-    @IsNotEmpty()
-    isActive: boolean;
-
-    @IsNotEmpty()
-    groupUser: User;
+    
 }
 
 export class GroupFilterRequest{
