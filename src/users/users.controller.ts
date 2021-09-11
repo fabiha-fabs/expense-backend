@@ -1,10 +1,11 @@
-import { Delete, ParseIntPipe, Put, Query, UseGuards } from '@nestjs/common';
+import { Delete, ParseIntPipe, Put, Query, UseGuards, Request } from '@nestjs/common';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { User } from './entity/users.entity';
 import { UserCreateRequest, UserFilterRequest } from './request/users.request';
 import { UsersService } from './users.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
     constructor(
@@ -22,9 +23,9 @@ export class UsersController {
         return await this.userService.createUser(userRequest);
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get("/userall")
-    async userAll() {
+    async userAll(@Request() req) {
+        console.log('User who executed request: ',req.user);
         console.log("userall user request method call--") ;
         return await this.userService.findAll();
     }

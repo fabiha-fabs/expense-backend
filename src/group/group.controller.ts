@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Group } from './entity/group.entity';
 import { GroupService } from './group.service';
 import { GroupCreateRequest, GroupFilterRequest, GroupUpdateRequest } from './request/group.request';
 
+@UseGuards(JwtAuthGuard)
 @Controller('group')
 export class GroupController {
     constructor(
