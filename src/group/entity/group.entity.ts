@@ -1,6 +1,6 @@
 import { Expense } from "src/expense/entity/expense.entity";
 import { User } from "src/users/entity/users.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Group{
@@ -13,11 +13,8 @@ export class Group{
     @Column({ default: true })
     isActive: boolean;
 
-    @ManyToOne(() => User, user => user.groups)
-    groupUser: User;
-
-    @OneToOne(() => User, user => user.groups)
-    creator: User;
+    @ManyToMany(() => User, user => user.groups)
+    users: User[];
 
     @ManyToOne(() => Expense, expense => expense.expenseId)
     expenses: Expense[];

@@ -23,8 +23,14 @@ export class UsersService {
       }
     
       async findOne(userId: number): Promise<User> {
-        const userFindById: User = await this.usersRepository.findOne(userId);
-        return userFindById;
+        const user: User = await this.usersRepository.findOne(userId);
+        /* const user: User = await this.usersRepository.findOne({
+          where: {
+            userId: userId
+          },
+          relations: ['group']
+        }); */
+        return user;
       }
     
       async remove(id: number): Promise<void> {

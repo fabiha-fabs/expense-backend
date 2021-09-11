@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ExpenseService } from './expense.service';
 import { ExpenseCreateRequest, ExpenseFilterRequest } from './request/expense.request';
 
+@UseGuards(JwtAuthGuard)
 @Controller('expense')
 export class ExpenseController {
     constructor(

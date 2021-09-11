@@ -1,7 +1,7 @@
 
 import { Expense } from "src/expense/entity/expense.entity";
 import { Group } from "src/group/entity/group.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -34,8 +34,9 @@ export class User {
  
     @DeleteDateColumn()
     deletedAt: Date;
-
-    @OneToMany(() => Group, group => group.groupUser)
+    
+    @ManyToMany(() => Group, group => group.users)
+    @JoinTable()
     groups: Group[];
 
     @OneToMany(() => Expense, expense => expense.expenseUser)
