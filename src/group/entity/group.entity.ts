@@ -16,7 +16,7 @@ export class Group{
     @ManyToMany(() => User, user => user.groups)
     users: User[];
 
-    @ManyToOne(() => Expense, expense => expense.expenseId)
+    @OneToMany(() => Expense, expense => expense.expenseId)
     expenses: Expense[];
 
     @ManyToOne(() => User, user => user.createdGroups)

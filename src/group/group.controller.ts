@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, U
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Group } from './entity/group.entity';
 import { GroupService } from './group.service';
-import { GroupCreateRequest, GroupFilterRequest, GroupUpdateRequest } from './request/group.request';
+import { GroupAddUsersRequest, GroupCreateRequest, GroupFilterRequest, GroupUpdateRequest } from './request/group.request';
 
 @UseGuards(JwtAuthGuard)
 @Controller('group')
@@ -48,5 +48,15 @@ export class GroupController {
     @Get("/paginated")
     async getPaginated(@Query() request: GroupFilterRequest) {
         return await this.groupService.getPagination(request.perPageDataCnt, request.pageNumber);
+    }
+
+    @Post("/addusers")
+    async addUsers(@Body() groupAddUsersRequest: GroupAddUsersRequest){
+        return await this.groupService.addUsersToGroup(groupAddUsersRequest);
+    }
+
+    @Post("/detachedusers")
+    async detachedUsers(@Body() groupAddUsersRequest: GroupAddUsersRequest){
+        return await this.groupService.detachedUsersFromGroup(groupAddUsersRequest);
     }
 }

@@ -13,6 +13,9 @@ export class ExpenseCreateRequest{
     @IsNotEmpty()
     amount: number;
 
+    @IsNotEmpty()
+    expenseGroup: Group;
+
     @IsOptional()
     expenseDate: Date;
 }

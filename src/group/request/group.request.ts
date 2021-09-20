@@ -22,3 +22,13 @@ export class GroupFilterRequest{
     pageNumber: number;
     
   }
+
+  export class GroupAddUsersRequest{
+
+    @IsNotEmpty()
+    userIDsArr: number[];
+
+    @IsNotEmpty()
+    groupID: number;
+
+  }
