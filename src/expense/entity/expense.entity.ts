@@ -18,8 +18,8 @@ export class Expense{
     @ManyToOne(() => User, user => user.expenses)
     expenseUser: User;
 
-    @OneToMany(() => Group, group => group.groupId)
-    expenseGroup: Group[];
+    @ManyToOne(() => Group, group => group.groupId)
+    expenseGroup: Group;
 
     @Column()
     amount: number;

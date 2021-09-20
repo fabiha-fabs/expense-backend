@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { User } from 'src/users/entity/users.entity';
 import { Repository } from 'typeorm';
 import { Group } from './entity/group.entity';
-import { GroupCreateRequest, GroupUpdateRequest } from './request/group.request';
+import { GroupAddUsersRequest, GroupCreateRequest, GroupUpdateRequest } from './request/group.request';
 
 @Injectable()
 export class GroupService {
     constructor(
         @InjectRepository(Group)
         private groupRepository: Repository<Group>,
+        @InjectRepository(User)
+        private userRepository: Repository<User>,
       ) {}
 
       async createGroup(groupCreateRequest: GroupCreateRequest): Promise<Group>{
@@ -23,7 +26,12 @@ export class GroupService {
       }
     
       async findOne(groupId: number): Promise<Group> {
-        const groupFindById: Group = await this.groupRepository.findOne(groupId);
+        const groupFindById: Group = await this.groupRepository.findOne({
+          where:{
+            groupId: groupId,
+          },
+          relations: ['expenses'],
+        });
         return groupFindById;
       }
     
@@ -42,5 +50,36 @@ export class GroupService {
           skip: (pageNumber - 1) * perPageDataCnt,
           take: perPageDataCnt,
         });
+      }
+
+      async addUsersToGroup(groupAddUsersRequest: GroupAddUsersRequest): Promise<Group>{
+        const usersList: User[] = await this.userRepository.findByIds(groupAddUsersRequest.userIDsArr);
+        const group: Group = await this.groupRepository.findOne({
+          where:{
+            groupId: groupAddUsersRequest.groupID
+          },
+          relations: ['users'],
+        });
+        const existingUserIds: number[] = group?.users.map((user) => user.userId);
+        const newUsersToBeAdded = usersList.filter((user) => !existingUserIds.includes(user.userId));
+        const usersToBeAdded: User[] = group?.users.concat(newUsersToBeAdded);
+        group.users = usersToBeAdded;
+        return await this.groupRepository.save(group);
+      }
+
+      async detachedUsersFromGroup(groupAddUsersRequest: GroupAddUsersRequest): Promise<Group>{
+        const usersList: User[] = await this.userRepository.findByIds(groupAddUsersRequest.userIDsArr);
+        const connectedUsersInGroup: Group = await this.groupRepository.findOne({
+          where:{
+            groupId: groupAddUsersRequest.groupID
+          },
+          relations: ['users']
+        });
+        const usersToRemain: User[] = connectedUsersInGroup
+                                            ?.users
+                                            ?.filter((user) => 
+                                              !groupAddUsersRequest.userIDsArr.includes(user.userId));
+        connectedUsersInGroup.users = usersToRemain;
+        return await this.groupRepository.save(connectedUsersInGroup);
       }
 }
