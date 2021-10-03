@@ -9,6 +9,9 @@ export class Group{
   
     @Column({unique: true})
     groupName: string;
+
+    @Column()
+    description: string;
  
     @Column({ default: true })
     isActive: boolean;
@@ -16,7 +19,7 @@ export class Group{
     @ManyToMany(() => User, user => user.groups)
     users: User[];
 
-    @OneToMany(() => Expense, expense => expense.expenseId)
+    @OneToMany(() => Expense, expense => expense.expenseGroup)
     expenses: Expense[];
 
     @ManyToOne(() => User, user => user.createdGroups)

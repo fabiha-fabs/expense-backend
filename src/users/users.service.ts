@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from './entity/users.entity';
-import { UserCreateRequest } from './request/users.request';
+import { UserCreateRequest, UserFilterRequest } from './request/users.request';
 import { UserCreateResponse } from './response/users.response';
 
 @Injectable()
@@ -47,6 +47,19 @@ export class UsersService {
         return await this.usersRepository.find({
           skip: (pageNumber - 1) * perPageDataCnt,
           take: perPageDataCnt,
+        });
+      }
+
+      async getFilteredUsers(userFilterRequest: UserFilterRequest) {
+        return await this.usersRepository.find({
+          where: {
+            ...(userFilterRequest.userName && {userName: Like(`${userFilterRequest.userName}%`)}),
+            ...(userFilterRequest.emailId && {emailId: Like(`${userFilterRequest.emailId}%`)}),
+            ...(userFilterRequest.contactNo && {contactNo: Like(`%${userFilterRequest.contactNo}%`)}),
+            ...(userFilterRequest.country && {country: Like(`%${userFilterRequest.country}%`)}),
+          },
+          skip: (userFilterRequest.pageNumber - 1) * userFilterRequest.perPageDataCnt,
+          take: userFilterRequest.perPageDataCnt,
         });
       }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards, Request, HttpStatus, Res } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
@@ -15,6 +15,11 @@ export class AppController {
   async login(@Request() req) {
     //return req.user;
     return this.authService.login(req.user);
+  }
+
+  @Post('/logout')
+  async logout(@Request() req, @Res() res) {
+    return res.sendStatus(HttpStatus.OK);
   }
   
   @Get()
