@@ -23,9 +23,29 @@ export class UserCreateRequest {
   }
 
   export class UserFilterRequest{
-
     perPageDataCnt: number;
-
     pageNumber: number;
-    
+    userName?: string;
+    emailId?: string;
+    contactNo?: string;
+    country?: string;
+  }
+
+  export class UserUpdateRequest {
+
+
+    userName: string;
+ 
+    @Length(3, 5)
+    password: string;
+
+
+    @IsEmail()
+    emailId: string;
+
+
+    contactNo: string;
+
+    country: string;
+
   }
