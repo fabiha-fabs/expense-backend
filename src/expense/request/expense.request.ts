@@ -27,3 +27,18 @@ export class ExpenseFilterRequest{
     pageNumber: number;
     
   }
+
+  export class ExpenseUpdateRequest{
+
+    @IsNotEmpty()
+    expenseName: string;
+  
+    @IsOptional()
+    description: string;
+
+    @IsNotEmpty()
+    amount: number;
+
+    @IsOptional()
+    expenseDate: Date;
+}

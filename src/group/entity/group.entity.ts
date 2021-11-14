@@ -1,36 +1,47 @@
-import { Expense } from "src/expense/entity/expense.entity";
-import { User } from "src/users/entity/users.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Expense } from 'src/expense/entity/expense.entity';
+import { User } from 'src/users/entity/users.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class Group{
-    @PrimaryGeneratedColumn()
-    groupId: number;
-  
-    @Column({unique: true})
-    groupName: string;
+export class Group {
+  @PrimaryGeneratedColumn()
+  groupId: number;
 
-    @Column()
-    description: string;
- 
-    @Column({ default: true })
-    isActive: boolean;
+  @Column({ unique: true })
+  groupName: string;
 
-    @ManyToMany(() => User, user => user.groups)
-    users: User[];
+  @Column()
+  description: string;
 
-    @OneToMany(() => Expense, expense => expense.expenseGroup)
-    expenses: Expense[];
+  @Column({ default: true })
+  isActive: boolean;
 
-    @ManyToOne(() => User, user => user.createdGroups)
-    creator: User;
+  @ManyToMany(() => User, (user) => user.groups)
+  users: User[];
 
-    @CreateDateColumn()
-    createdAt: Date;
-  
-    @UpdateDateColumn()
-    updatedAt: Date;
- 
-    @DeleteDateColumn()
-    deletedAt: Date;
+  @OneToMany(() => Expense, (expense) => expense.expenseGroup)
+  expenses: Expense[];
+
+  @ManyToOne(() => User, (user) => user.createdGroups)
+  creator: User;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

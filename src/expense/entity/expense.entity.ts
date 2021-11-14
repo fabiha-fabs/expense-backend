@@ -1,40 +1,45 @@
-
-import { Group } from "src/group/entity/group.entity";
-import { User } from "src/users/entity/users.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Group } from 'src/group/entity/group.entity';
+import { User } from 'src/users/entity/users.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class Expense{
+export class Expense {
+  @PrimaryGeneratedColumn()
+  expenseId: number;
 
-    @PrimaryGeneratedColumn()
-    expenseId: number;
-  
-    @Column()
-    expenseName: string;
-  
-    @Column()
-    description: string;
+  @Column()
+  expenseName: string;
 
-    @ManyToOne(() => User, user => user.expenses)
-    expenseUser: User;
+  @Column()
+  description: string;
 
-    @ManyToOne(() => Group, group => group.groupId)
-    expenseGroup: Group;
+  @ManyToOne(() => User, (user) => user.expenses)
+  expenseUser: User;
 
-    @Column()
-    amount: number;
+  @ManyToOne(() => Group, (group) => group.groupId)
+  expenseGroup: Group;
 
-    @Column({default: () => 'CURRENT_TIMESTAMP'})
-    expenseDate: Date;
-  
-    @CreateDateColumn()
-    createdAt: Date;
-  
-    @UpdateDateColumn()
-    updatedAt: Date;
- 
-    @DeleteDateColumn()
-    deletedAt: Date;
+  @Column()
+  amount: number;
 
- 
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  expenseDate: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

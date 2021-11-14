@@ -1,47 +1,57 @@
-
-import { Expense } from "src/expense/entity/expense.entity";
-import { Group } from "src/group/entity/group.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Expense } from 'src/expense/entity/expense.entity';
+import { Group } from 'src/group/entity/group.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    userId: number;
-  
-    @Column({unique: true})
-    userName: string;
-  
-    @Column()
-    password: string;
+  @PrimaryGeneratedColumn()
+  userId: number;
 
-    @Column({unique: true})
-    emailId: string;
+  @Column({ unique: true })
+  userName: string;
 
-    @Column({ default: true })
-    isActive: boolean;
+  @Column()
+  password: string;
 
-    @Column({ default: null, nullable: true })
-    contactNo?: string;
+  @Column({ unique: true })
+  emailId: string;
 
-    @Column({ default: null, nullable: true })
-    country?: string;
-    
-    @ManyToMany(() => Group, group => group.users)
-    @JoinTable()
-    groups: Group[];
+  @Column({ default: true })
+  isActive: boolean;
 
-    @OneToMany(() => Expense, expense => expense.expenseUser)
-    expenses: Expense[];
+  @Column({ default: null, nullable: true })
+  contactNo?: string;
 
-    @OneToMany(() => Group, group => group.creator)
-    createdGroups: Group[];
+  @Column({ default: null, nullable: true })
+  country?: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
-  
-    @UpdateDateColumn()
-    updatedAt: Date;
- 
-    @DeleteDateColumn()
-    deletedAt: Date;
-  }
+  @ManyToMany(() => Group, (group) => group.users)
+  @JoinTable()
+  groups: Group[];
+
+  @OneToMany(() => Expense, (expense) => expense.expenseUser)
+  expenses: Expense[];
+
+  @OneToMany(() => Group, (group) => group.creator)
+  createdGroups: Group[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+}
