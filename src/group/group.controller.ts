@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -65,7 +66,7 @@ export class GroupController {
   @Get('/paginated')
   async getPaginated(@Query() request: GroupFilterRequest) {
     return await this.groupService.getPagination(
-      request.perPageDataCnt,
+      request.perPage,
       request.pageNumber,
     );
   }
@@ -83,5 +84,32 @@ export class GroupController {
   @Get('/calculate-total-cost/:id')
   async calculateTotalCost(@Param('id', ParseIntPipe) groupId: number) {
     return await this.groupService.calculateTotalCost(groupId);
+  }
+
+  @Get('/filtergroup')
+  async filterUsers(@Query() groupFilterRequest: GroupFilterRequest) {
+    return await this.groupService.getFilteredGroups(groupFilterRequest);
+  }
+
+  @Get('/join-or-leave-list')
+  async filterGroupListForJoinOrLeave(
+    @Request() req,
+    @Query() groupFilterRequest: GroupFilterRequest,
+  ) {
+    return await this.groupService.getGroupJoinLeaveListForUser(
+      groupFilterRequest,
+      req.user,
+    );
+  }
+
+  @Get('/joined-groups')
+  async joinedGroupListForCurrentUser(
+    @Request() req,
+    @Query() groupFilterRequest: GroupFilterRequest,
+  ) {
+    return await this.groupService.getJoinedGroupsListForCurrentUser(
+      groupFilterRequest,
+      req.user,
+    );
   }
 }

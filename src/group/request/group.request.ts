@@ -1,40 +1,33 @@
-import { Optional } from "@nestjs/common";
-import { IsNotEmpty } from "class-validator";
-import { User } from "src/users/entity/users.entity";
+import { Optional } from '@nestjs/common';
+import { IsNotEmpty } from 'class-validator';
+import { User } from 'src/users/entity/users.entity';
 
-export class GroupCreateRequest{
+export class GroupCreateRequest {
+  @IsNotEmpty()
+  groupName: string;
 
-    @IsNotEmpty()
-    groupName: string;
-
-    @Optional()
-    description: string;
-
+  @Optional()
+  description: string;
 }
 
-export class GroupUpdateRequest{
+export class GroupUpdateRequest {
+  @IsNotEmpty()
+  groupName: string;
 
-    @IsNotEmpty()
-    groupName: string;
-    
-    @Optional()
-    description: string;
+  @Optional()
+  description: string;
 }
 
-export class GroupFilterRequest{
+export class GroupFilterRequest {
+  perPage: number;
+  pageNumber: number;
+  groupName?: string;
+}
 
-    perPageDataCnt: number;
+export class GroupAddUsersRequest {
+  @IsNotEmpty()
+  userIDsArr: number[];
 
-    pageNumber: number;
-    
-  }
-
-  export class GroupAddUsersRequest{
-
-    @IsNotEmpty()
-    userIDsArr: number[];
-
-    @IsNotEmpty()
-    groupID: number;
-
-  }
+  @IsNotEmpty()
+  groupID: number;
+}

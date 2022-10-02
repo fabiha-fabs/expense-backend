@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { skip } from 'rxjs';
 import { Expense } from 'src/expense/entity/expense.entity';
 import { User } from 'src/users/entity/users.entity';
-import { Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import { Group } from './entity/group.entity';
 import {
   GroupExpenseUserInterface,
@@ -12,6 +13,7 @@ import {
 import {
   GroupAddUsersRequest,
   GroupCreateRequest,
+  GroupFilterRequest,
   GroupUpdateRequest,
 } from './request/group.request';
 
@@ -69,12 +71,16 @@ export class GroupService {
         emailId: user.emailId,
         contactNo: user.contactNo,
         country: user.country,
-        paidDue: usersExpense - averageCost,
+        paidDue: (usersExpense - averageCost).toFixed(2),
       };
       usersListWIthPaidDues.push(userWithPaidDue);
     });
 
     const groupExpenseUser: GroupExpenseUserInterface = {
+      groupName: groupUserExpenseData.groupName,
+      description: groupUserExpenseData.description,
+      isActive: groupUserExpenseData.isActive,
+      creator: groupUserExpenseData.creator,
       expenses: groupUserExpenseData.expenses,
       users: usersListWIthPaidDues,
     };
@@ -148,5 +154,84 @@ export class GroupService {
     let totalCost = 0;
     expenses.map((expense) => (totalCost += expense.amount));
     return totalCost;
+  }
+
+  async getFilteredGroups(groupFilterRequest: GroupFilterRequest) {
+    const [data, count] = await this.groupRepository.findAndCount({
+      where: {
+        ...(groupFilterRequest.groupName && {
+          groupName: Like(`${groupFilterRequest.groupName}%`),
+        }),
+      },
+      skip: (groupFilterRequest.pageNumber - 1) * groupFilterRequest.perPage,
+      take: groupFilterRequest.perPage,
+    });
+    return { data: data, count: count };
+  }
+
+  async getGroupJoinLeaveListForUser(
+    groupFilterRequest: GroupFilterRequest,
+    loggedUser: User,
+  ) {
+    const [data, count] = await this.groupRepository.findAndCount({
+      where: {
+        ...(groupFilterRequest.groupName && {
+          groupName: Like(`${groupFilterRequest.groupName}%`),
+        }),
+      },
+      relations: ['users'],
+      skip: (groupFilterRequest.pageNumber - 1) * groupFilterRequest.perPage,
+      take: groupFilterRequest.perPage,
+    });
+    return {
+      data: data.map((groupData) =>
+        Object.assign(groupData, {
+          joined: this.isUserJoinedToGroup(groupData, loggedUser),
+        }),
+      ),
+      count: count,
+    };
+  }
+
+  isUserJoinedToGroup(group: Group, loggedUser: User): boolean {
+    for (const user of group?.users) {
+      if (user.userId == loggedUser.userId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  async getJoinedGroupsListForCurrentUser(
+    groupFilterRequest: GroupFilterRequest,
+    loggedUser: User,
+  ) {
+    const user: User = await this.userRepository.findOne({
+      where: { userId: loggedUser.userId },
+      relations: ['groups'],
+    });
+    if (!user) {
+      throw new BadRequestException('User not found!');
+    }
+
+    return {
+      data: this.handleFilter(groupFilterRequest, user.groups),
+      count: user?.groups?.length,
+    };
+  }
+
+  handleFilter(
+    groupFilterRequest: GroupFilterRequest,
+    groups: Group[],
+  ): Group[] {
+    if (groupFilterRequest?.groupName?.length) {
+      groups = groups.filter((group) =>
+        group.groupName.startsWith(groupFilterRequest?.groupName),
+      );
+    }
+    return groups?.slice(
+      (groupFilterRequest.pageNumber - 1) * groupFilterRequest.perPage,
+      groupFilterRequest.perPage,
+    );
   }
 }

@@ -1,23 +1,22 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
-export class UserCreateResponse{
+export class UserCreateResponse {
+  @Expose()
+  userName: string;
 
-    @Expose()
-    userName: string;
+  @Expose()
+  password: string;
 
-    @Expose()
-    password: string;
+  @Expose()
+  emailId: string;
 
-    @Expose()
-    emailId: string;
+  @Expose()
+  isActive: boolean;
 
-    @Expose()
-    isActive: boolean;
+  @Expose()
+  contactNo?: string;
 
-    @Expose()
-    contactNo?: string;
-
-    @Expose()
-    country?: string;
+  @Expose()
+  country?: string;
 }
